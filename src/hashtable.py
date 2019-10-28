@@ -20,10 +20,13 @@ class HashTable:
     def _hash(self, key):
         '''
         Hash an arbitrary key and return an integer.
-
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+        hash = 0
+
+        for char in str(key):
+            hash += ord(char)
+        return hash % self.capacity
 
 
     def _hash_djb2(self, key):
@@ -51,8 +54,19 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        key_hash = self._hash(key)
+        key_value = [key, value]
 
+        if self.storage[key_hash] is None:
+            self.storage[key_hash] = list([key_value])
+            return
+        else:
+            for pair in self.storage[key_hash]:
+                if pair[0] == key:
+                    pair[1] = value
+                    return
+            self.storage[key_hash].append(key_value)
+            return
 
 
     def remove(self, key):
@@ -63,7 +77,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        key_hash = self._hash(key)
+
+        if self.storage[key_hash] is None:
+            return "Key Not Found"
+        for i in range(0,len(self.storage[key_hash])):
+            if self.storage[key_hash][i][0] == key:
+                self.storage[key_hash].pop(i)
+                return
+
 
 
     def retrieve(self, key):
@@ -74,7 +97,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        key_hash = self._hash(key)
+
+        if self.storage[key_hash] is not None:
+            for pair in self.storage[key_hash]:
+                if pair[0] == key:
+                    return pair[1]
+
+        return None
 
 
     def resize(self):
