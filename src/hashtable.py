@@ -22,6 +22,9 @@ class HashTable:
         Hash an arbitrary key and return an integer.
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+
+
+
         hash = 0
 
         for char in str(key):
@@ -54,25 +57,47 @@ class HashTable:
 
         Fill this in.
         '''
+
         key_hash = self._hash(key)
-        print(f"key hash:{key_hash}")
-        key_value = [key, value]
-        print(f"key value:{key_value}")
-        print(f"self.storage[key hash]:{self.storage[key_hash]} \n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-
-        if self.storage[key_hash] is None:
-            self.storage[key_hash] = list([key_value])
-            return
+        if self.storage[key_hash] == None:
+            self.storage[key_hash] = LinkedPair(key, value)
         else:
-            for pair in self.storage[key_hash]:
-                print(f"pair[0]:{pair[0]}")
-                print(f"pair[1]:{pair[1]}\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                if pair[0] == key:
-                    pair[1] = value
+            current = self.storage[key_hash]
+            if current.key == key:
+                current.value = value
+                return
+
+            while current.next:
+                if current.next.key == key:
+                    current.next.value = value
                     return
-            self.storage[key_hash].append(key_value)
-            return
+                else:
+                    current = current.next
+            current.next = LinkedPair(key, value)
+
+
+
+        # key_hash = self._hash(key)
+        # print(f"key hash:{key_hash}")
+        # key_value = [key, value]
+        # print(f"key value:{key_value}")
+        # print(f"self.storage[key hash]:{self.storage[key_hash]}")
+        #
+        #
+        # if self.storage[key_hash] is None:
+        #     self.storage[key_hash] = list([key_value])
+        #     return
+        # else:
+        #     for pair in self.storage[key_hash]:
+        #         print(f"pair[0]:{pair[0]}")
+        #         print(f"pair[1]:{pair[1]}\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        #         if pair[0] == key:
+        #             pair[1] = value
+        #             print(f"pair[1] new value:{value}")
+        #             return
+        #     self.storage[key_hash].append(key_value)
+        #     return
 
 
     def remove(self, key):
@@ -83,6 +108,11 @@ class HashTable:
 
         Fill this in.
         '''
+
+
+
+
+
 
         key_hash = self._hash(key)
 
@@ -103,14 +133,28 @@ class HashTable:
 
         Fill this in.
         '''
+
         key_hash = self._hash(key)
 
-        if self.storage[key_hash] is not None:
-            for pair in self.storage[key_hash]:
-                if pair[0] == key:
-                    return pair[1]
+        current = self.storage[key_hash]
 
+        while current:
+            if current.key == key:
+                return current.value
+            #changes the pointer if no value is found
+            else:
+                current = current.next
+        #if nothing in LinkedList return nonzy mcFunzy
         return None
+
+        # key_hash = self._hash(key)
+        #
+        # if self.storage[key_hash] is not None:
+        #     for pair in self.storage[key_hash]:
+        #         if pair[0] == key:
+        #             return pair[1]
+        #
+        # return None
 
 
     def resize(self):
@@ -120,6 +164,14 @@ class HashTable:
 
         Fill this in.
         '''
+
+
+
+
+
+
+
+
         new_storage = [None] * (len(self.storage) * 2)
 
         for i in range(len(self.storage)):
