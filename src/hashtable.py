@@ -108,20 +108,39 @@ class HashTable:
 
         Fill this in.
         '''
-
-
-
-
-
-
-        key_hash = self._hash(key)
-
-        if self.storage[key_hash] is None:
-            return "Key Not Found"
-        for i in range(0,len(self.storage[key_hash])):
-            if self.storage[key_hash][i][0] == key:
-                self.storage[key_hash].pop(i)
+        index = self._hash_mod(key)
+        # pointer
+        current = self.storage[index]
+        # check for existence
+        if current.key == key:
+            self.storage[index] = current.next
+            return
+        # if not on initial level, check if on linked list
+        while current.next:
+            if current.next.key == key:
+                # change pointer to next node in linked list
+                current.next = current.next.next
                 return
+            # change pointer
+            else:
+                current = current.next
+
+        print(f"Key not found")
+
+
+
+
+
+
+
+        # key_hash = self._hash(key)
+        #
+        # if self.storage[key_hash] is None:
+        #     return "Key Not Found"
+        # for i in range(0,len(self.storage[key_hash])):
+        #     if self.storage[key_hash][i][0] == key:
+        #         self.storage[key_hash].pop(i)
+        #         return
 
 
 
